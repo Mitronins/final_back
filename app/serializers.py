@@ -1,14 +1,41 @@
 from rest_framework import serializers
 
 
-class TestSerializer(serializers.Serializer):
+class TestsSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     title = serializers.CharField(max_length=255, required=True)
     description = serializers.CharField(max_length=550, required=True)
 
+
+class TestSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    title = serializers.CharField(max_length=255, required=True)
+    description = serializers.CharField(max_length=550, required=True)
+    # questions = QuestionSer
+
+
+
+class QuestionSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    type = serializers.IntegerField()
+    text = serializers.CharField(max_length=255)
+    # answers
+
+
+class AnswerSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    text = serializers.CharField(max_length=550, required=True)
+    is_true = serializers.BooleanField()
+    # answers
+
 class UserSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     username = serializers.CharField(max_length=255, required=True)
+
+# class AnswerSerializer(serializers.Serializer):
+#     id = serializers.IntegerField(read_only=True)
+#     text = serializers.CharField(max_length=255, required=True)
+#     is_true = serializers.BooleanField()
 #
 #
 # class CompanySerializer(serializers.Serializer):
