@@ -15,20 +15,25 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from app.views import TestView, LoginView, UserView, TestsView
+from app.utils import AuthToken
+from app.views import TestView, LoginView, UserView, TestsView, TestViewSet
 
 router = DefaultRouter()
+router.register('tests', TestViewSet)
+router.register('users', UserView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('test/', TestView.as_view()),
     path('login/', LoginView.as_view()),
-    path('user/', UserView.as_view()),
+    # path('users/', UserView.as_view()),
     url(r'test/(?P<test_id>[0-9]+)/$', TestView.as_view()),
-    url(r'tests/', TestsView.as_view()),
+    # url(r'tests/', TestsView.as_view()),
+    path('', include(router.urls)),
+    path('login1/', AuthToken.as_view())
 ]
 
 # urlpatterns = {

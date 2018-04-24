@@ -1,4 +1,8 @@
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.models import User
 from rest_framework import serializers
+
+from app.models import Test, Answer, Question
 
 
 class TestsSerializer(serializers.Serializer):
@@ -14,23 +18,40 @@ class TestSerializer(serializers.Serializer):
     # questions = QuestionSer
 
 
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = '__all__'
 
-class QuestionSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    type = serializers.IntegerField()
-    text = serializers.CharField(max_length=255)
     # answers
 
 
-class AnswerSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    text = serializers.CharField(max_length=550, required=True)
-    is_true = serializers.BooleanField()
+class QuestionSerializer(serializers.ModelSerializer):
+    answers = AnswerSerializer(source='answer_set', many=True)
+
+    class Meta:
+        model = Question
+        fields = '__all__'
     # answers
 
-class UserSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    username = serializers.CharField(max_length=255, required=True)
+
+class Test1Serializer(serializers.ModelSerializer):
+    questions = QuestionSerializer(source='question_set', many=True)
+
+    class Meta:
+        model = Test
+        fields = '__all__'
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        validated_data['password'] = make_password(password)
+        return User.objects.create(**validated_data)
 
 # class AnswerSerializer(serializers.Serializer):
 #     id = serializers.IntegerField(read_only=True)

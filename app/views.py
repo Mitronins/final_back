@@ -8,9 +8,11 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.exceptions import ValidationError, ParseError
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 
 from app.models import Test, Lesson, Question
-from app.serializers import TestsSerializer, UserSerializer, TestSerializer, QuestionSerializer, AnswerSerializer
+from app.serializers import TestsSerializer, UserSerializer, TestSerializer, QuestionSerializer, AnswerSerializer, \
+    Test1Serializer
 
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):
@@ -51,6 +53,11 @@ class TestView(NoCSRFView):
         })
 
 
+class TestViewSet(ModelViewSet):
+    serializer_class = Test1Serializer
+    queryset = Test.objects.all()
+
+
 class LessonsView(NoCSRFView):
     def get(self, request):
         lessons = Lesson.objects.all()
@@ -69,13 +76,9 @@ class LessonView(NoCSRFView):
         })
 
 
-class UserView(NoCSRFView):
-    def get(self, request):
-        user = request.user
-
-        return Response(data={
-            'data': UserSerializer(user).data
-        })
+class UserView(ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
 
 
 class LoginView(NoCSRFView):
