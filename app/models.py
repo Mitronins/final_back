@@ -58,6 +58,7 @@ class Chapter(Model):
 
 
 class Dictionary(Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     title = models.CharField(max_length=255, verbose_name='Название', default='Мой словарь')
 
     def __str__(self):
@@ -69,11 +70,6 @@ class Word(Model):
     en_word = models.CharField(max_length=255, verbose_name='Слово на английском')
     ru_word = models.CharField(max_length=255, verbose_name='Слово на русском')
     note = models.TextField(verbose_name='Заметка')
-
-
-class DictionaryUser(Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    dictionary = models.ForeignKey(Dictionary, on_delete=models.CASCADE)
 
 
 class LessonUser(Model):

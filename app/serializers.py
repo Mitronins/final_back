@@ -2,7 +2,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from app.models import Test, Answer, Question, Lesson, Chapter, TestUser, LessonUser, DictionaryUser
+from app.models import Test, Answer, Question, Lesson, Chapter, TestUser, LessonUser, Dictionary
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -13,7 +13,9 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         password = validated_data.pop('password')
         validated_data['password'] = make_password(password)
-        return User.objects.create(**validated_data)
+        user = User.objects.create(**validated_data)
+        Dictionary.objects.create(user=user)
+        return user
 
 
 class UsersSerializer(serializers.ModelSerializer):
@@ -25,7 +27,7 @@ class UsersSerializer(serializers.ModelSerializer):
 class ChapterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chapter
-        fields = ('id', 'title', 'text', 'queue')
+        exclude = ('lesson',)
 
 
 class LessonsSerializer(serializers.ModelSerializer):
@@ -67,10 +69,4 @@ class TestUserSerializer(serializers.ModelSerializer):
 class LessonUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = LessonUser
-        fields = '__all__'
-
-
-class DictionaryUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DictionaryUser
         fields = '__all__'

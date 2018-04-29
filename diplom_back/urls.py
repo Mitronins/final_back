@@ -20,8 +20,7 @@ from rest_framework.routers import DefaultRouter
 
 from app import views
 from app.utils import AuthToken
-from app.views import TestsViewSet, RegisterView, UsersView, LessonsView, TestUserViewSet, LessonUserViewSet, \
-    DictionaryUserViewSet
+from app.views import TestsViewSet, RegisterView, UsersView, LessonsView, TestUserViewSet, LessonUserViewSet
 
 router = DefaultRouter()
 router.register('tests', TestsViewSet)
@@ -30,7 +29,6 @@ router.register('users', UsersView)
 router.register('lessons', LessonsView)
 router.register('mytests', TestUserViewSet)
 router.register('mylessons', LessonUserViewSet)
-router.register('mydictionary', DictionaryUserViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
