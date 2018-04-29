@@ -2,7 +2,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from app.models import Test, Answer, Question, Lesson, Chapter
+from app.models import Test, Answer, Question, Lesson, Chapter, TestUser, LessonUser, DictionaryUser
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -22,19 +22,13 @@ class UsersSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'first_name', 'last_name')
 
 
-class LessonsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Lesson
-        fields = ('id', 'title', 'description')
-
-
 class ChapterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chapter
-        fields = ('id', 'title', 'text')
+        fields = ('id', 'title', 'text', 'queue')
 
 
-class LessonSerializer(serializers.ModelSerializer):
+class LessonsSerializer(serializers.ModelSerializer):
     chapters = ChapterSerializer(source='chapter_set', many=True)
 
     class Meta:
@@ -56,9 +50,27 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class Test1Serializer(serializers.ModelSerializer):
+class TestSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(source='question_set', many=True)
 
     class Meta:
         model = Test
+        fields = '__all__'
+
+
+class TestUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TestUser
+        fields = '__all__'
+
+
+class LessonUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LessonUser
+        fields = '__all__'
+
+
+class DictionaryUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DictionaryUser
         fields = '__all__'

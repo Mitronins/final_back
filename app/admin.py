@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from app.models import Question, Lesson, Chapter, Test, Answer
+from app.models import Question, Lesson, Chapter, Test, Answer, Word, Dictionary
 
 
 class QuestionAdmin(admin.ModelAdmin):
@@ -22,9 +22,9 @@ class LessonAdmin(admin.ModelAdmin):
 
 class ChapterAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 'title', 'text', 'lesson')
+        'id', 'title', 'text', 'lesson', 'queue')
     fields = (
-        'title', 'text', 'lesson')
+        'title', 'text', 'lesson', 'queue')
 
 
 class TestAdmin(admin.ModelAdmin):
@@ -41,8 +41,23 @@ class AnswerAdmin(admin.ModelAdmin):
         'question', 'text', 'is_true')
 
 
+class DictionaryAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 'title')
+    fields = ('title',)
+
+
+class WordAdmin(admin.ModelAdmin):
+    list_display = (
+        'id', 'en_word', 'ru_word', 'note')
+    fields = (
+        'en_word', 'ru_word', 'note', 'dictionary')
+
+
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Lesson, LessonAdmin)
 admin.site.register(Chapter, ChapterAdmin)
 admin.site.register(Test, TestAdmin)
 admin.site.register(Answer, AnswerAdmin)
+admin.site.register(Word, WordAdmin)
+admin.site.register(Dictionary, DictionaryAdmin)

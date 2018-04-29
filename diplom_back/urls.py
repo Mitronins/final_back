@@ -20,18 +20,20 @@ from rest_framework.routers import DefaultRouter
 
 from app import views
 from app.utils import AuthToken
-from app.views import TestsViewSet, RegisterView, UsersView, LessonsView, LessonView
+from app.views import TestsViewSet, RegisterView, UsersView, LessonsView, TestUserViewSet, LessonUserViewSet, \
+    DictionaryUserViewSet
 
 router = DefaultRouter()
 router.register('tests', TestsViewSet)
 router.register('register', RegisterView)
 router.register('users', UsersView)
 router.register('lessons', LessonsView)
-router.register(r'lesson/(?P<chat_id>[0-9]+)', LessonView)
+router.register('mytests', TestUserViewSet)
+router.register('mylessons', LessonUserViewSet)
+router.register('mydictionary', DictionaryUserViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
-    path('login/', AuthToken.as_view())
+    path('login/', AuthToken.as_view()),
 ]
-
