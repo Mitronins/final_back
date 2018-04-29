@@ -1,0 +1,20 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$100000$B6rmazcqbjxF$LYcQJQrM3o4XZhx7MIAAabGBaXo3ujjBwHd2ZAcVLAE=",
+        "last_login": null,
+        "is_superuser": true,
+        "username": "\u0444admin",
+        "first_name": "",
+        "last_name": "",
+        "email": "mitronin.sergei@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2018-04-27T18:47:29.689Z",
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]

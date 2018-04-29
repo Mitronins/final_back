@@ -18,30 +18,20 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
+from app import views
 from app.utils import AuthToken
-from app.views import TestView, LoginView, UserView, TestsView, TestViewSet
+from app.views import TestsViewSet, RegisterView, UsersView, LessonsView, LessonView
 
 router = DefaultRouter()
-router.register('tests', TestViewSet)
-router.register('users', UserView)
+router.register('tests', TestsViewSet)
+router.register('register', RegisterView)
+router.register('users', UsersView)
+router.register('lessons', LessonsView)
+router.register(r'lesson/(?P<chat_id>[0-9]+)', LessonView)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('test/', TestView.as_view()),
-    path('login/', LoginView.as_view()),
-    # path('users/', UserView.as_view()),
-    url(r'test/(?P<test_id>[0-9]+)/$', TestView.as_view()),
-    # url(r'tests/', TestsView.as_view()),
     path('', include(router.urls)),
-    path('login1/', AuthToken.as_view())
+    path('login/', AuthToken.as_view())
 ]
 
-# urlpatterns = {
-#     url('admin/', admin.site.urls),
-#     url('login/', LoginView.as_view()),
-#     url('user/', UserView.as_view()),
-#     url('register/', RegisterView.as_view()),
-#     url('tests/', TestsView.as_view()),
-#     url('lessons/', LessonsView.as_view()),
-#     url('lesson/', LessonView.as_view()),
-#
