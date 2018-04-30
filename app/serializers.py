@@ -69,9 +69,21 @@ class TestSerializer(serializers.ModelSerializer):
         model = Test
         fields = '__all__'
 
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        try:
+            test_user = TestUser.objects.get(user=self.context['request'].user, test=instance)
+            status = test_user.status
+            right_answers = test_user.right_answers
+        except LessonUser.DoesNotExist:
+            status = None
+            right_answers = None
+        ret['status'] = status
+        ret['right_answers'] = right_answers
+        return ret
+
 
 class WordSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Word
         fields = '__all__'

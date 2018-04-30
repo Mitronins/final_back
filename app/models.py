@@ -85,6 +85,7 @@ class TestUser(Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     status = models.IntegerField(choices=STATUS, verbose_name='Статус теста', default=0)
+    right_answers = models.IntegerField(verbose_name='Правильные ответы', default=0)
 
     class Meta:
         unique_together = ('test', 'user')
