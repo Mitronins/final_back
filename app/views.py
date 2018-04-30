@@ -9,9 +9,9 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
-from app.models import Test, Lesson, TestUser, LessonUser, Dictionary
-from app.serializers import RegisterSerializer, TestSerializer, UsersSerializer, LessonsSerializer, TestUserSerializer, \
-    LessonUserSerializer
+from app.models import Test, Lesson, TestUser, LessonUser, Dictionary, Word
+from app.serializers import RegisterSerializer, TestSerializer, UsersSerializer, LessonsSerializer, \
+    DictionarySerializer, WordSerializer
 
 
 class RegisterView(mixins.CreateModelMixin, GenericViewSet):
@@ -20,7 +20,7 @@ class RegisterView(mixins.CreateModelMixin, GenericViewSet):
     serializer_class = RegisterSerializer
 
 
-class UsersView(mixins.ListModelMixin, GenericViewSet):
+class UsersView(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UsersSerializer
 
@@ -69,7 +69,7 @@ def get_test(request, test_id):
 
 class TestUserViewSet(ModelViewSet):
     queryset = TestUser.objects.all()
-    serializer_class = TestUserSerializer
+    serializer_class = TestSerializer
 
     def create(self, request):
         data = request.data
@@ -83,7 +83,31 @@ class TestUserViewSet(ModelViewSet):
         return Response()
 
 
-class LessonUserViewSet(ModelViewSet):
-    queryset = LessonUser.objects.all()
-    serializer_class = LessonUserSerializer
+class DictionaryViewSet(ModelViewSet):
+    pagination_class = None
+    queryset = Dictionary.objects.all()
+    serializer_class = DictionarySerializer
 
+    def get_queryset(self):
+        if self.request.user is not None:
+            dictionary = Dictionary.objects.filter(user=self.request.user)
+            return dictionary
+        else:
+            return Test.objects.all()
+
+    @action(detail=True, methods=['post'], url_path='add')
+    def add_word(self, request, pk=None):
+        data = request.data
+        data['dictionary'] = pk
+        word = WordSerializer(data=data)
+        word.is_valid(raise_exception=True)
+        print(word.validated_data)
+        word.save()
+        return Response()
+
+    @action(detail=True, methods=['post'], url_path='delete')
+    def delete_word(self, request, pk=None):
+        id_word = request.data.get('id_word')
+        word = Word.objects.filter(id=id_word)
+        word.delete()
+        return Response()

@@ -2,7 +2,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from app.models import Test, Answer, Question, Lesson, Chapter, TestUser, LessonUser, Dictionary
+from app.models import Test, Answer, Question, Lesson, Chapter, TestUser, LessonUser, Dictionary, Word
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -35,7 +35,17 @@ class LessonsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lesson
-        fields = ('id', 'title', 'description', 'chapters')
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        try:
+            lesson_user = LessonUser.objects.get(user=self.context['request'].user, lesson=instance)
+            status = lesson_user.status
+        except LessonUser.DoesNotExist:
+            status = None
+        ret['status'] = status
+        return ret
 
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -49,7 +59,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = '__all__'
+        exclude = ('test',)
 
 
 class TestSerializer(serializers.ModelSerializer):
@@ -60,13 +70,16 @@ class TestSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class TestUserSerializer(serializers.ModelSerializer):
+class WordSerializer(serializers.ModelSerializer):
+
     class Meta:
-        model = TestUser
+        model = Word
         fields = '__all__'
 
 
-class LessonUserSerializer(serializers.ModelSerializer):
+class DictionarySerializer(serializers.ModelSerializer):
+    words = WordSerializer(source='word_set', many=True)
+
     class Meta:
-        model = LessonUser
+        model = Dictionary
         fields = '__all__'

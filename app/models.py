@@ -27,7 +27,7 @@ class Question(Model):
     text = models.CharField(max_length=255, verbose_name='Текст вопроса')
 
     def __str__(self):
-        return '{} - {}'.format(self.test, self.text[0:10])
+        return '{} - {} - {}'.format(self.test, self.text[0:10], self.type)
 
 
 class Answer(Model):
