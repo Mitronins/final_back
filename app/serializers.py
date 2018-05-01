@@ -75,7 +75,7 @@ class TestSerializer(serializers.ModelSerializer):
             test_user = TestUser.objects.get(user=self.context['request'].user, test=instance)
             status = test_user.status
             right_answers = test_user.right_answers
-        except LessonUser.DoesNotExist:
+        except TestUser.DoesNotExist:
             status = None
             right_answers = None
         ret['status'] = status
